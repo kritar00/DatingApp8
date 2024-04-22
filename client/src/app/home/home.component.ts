@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-home',
@@ -10,7 +11,7 @@ export class HomeComponent implements OnInit {
   registerMode = false;
   users?: Array<{ id: number; userName: string }>;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.getUser();
@@ -24,7 +25,7 @@ export class HomeComponent implements OnInit {
     this.http.get('https://localhost:5000/api/users').subscribe({
       next: (response) =>
         (this.users = response as Array<{ id: number; userName: string }>),
-      error: (error) => console.error(error),
+      error: (error) => this.toastr.error(error.error),
       complete: () => console.info('Completed'),
     });
   }
